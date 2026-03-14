@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>DevOps Study Dashboard</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+/* ================================
+GLOBAL DESIGN SYSTEM
+================================ */
+
+:root{
+
+--bg:#f6f8ff;
+--sidebar:#ffffff;
+--card:#ffffff;
+
+--primary:#8e8bff;
+--primary-soft:#e9e9ff;
+
+--mint:#d8f5ef;
+--mint-dark:#9be3d6;
+
+--text:#333;
+--muted:#777;
+
+--border:#eceefe;
+
+}
+
+*{
+box-sizing:border-box;
+}
+
+body{
+
+margin:0;
+font-family:Inter,system-ui;
+background:var(--bg);
+color:var(--text);
+
+}
+
+/* ================================
+LAYOUT
+================================ */
+
+.wrapper{
+display:flex;
+height:100vh;
+}
+
+.sidebar{
+
+width:240px;
+background:var(--sidebar);
+padding:25px;
+border-right:1px solid var(--border);
+
+}
+
+.logo{
+
+font-size:20px;
+font-weight:600;
+color:var(--primary);
+margin-bottom:30px;
+
+}
+
+.nav-item{
+
+padding:12px;
+border-radius:10px;
+cursor:pointer;
+margin-bottom:8px;
+background:var(--primary-soft);
+
+}
+
+.nav-item:hover{
+background:#dfe0ff;
+}
+
+.main{
+
+flex:1;
+padding:30px;
+overflow:auto;
+
+}
+
+.header{
+
+display:flex;
+justify-content:space-between;
+margin-bottom:25px;
+
+}
+
+/* ================================
+CARDS
+================================ */
+
+.grid{
+
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:20px;
+
+}
+
+.card{
+
+background:var(--card);
+padding:20px;
+border-radius:16px;
+border:1px solid var(--border);
+
+}
+
+.card-title{
+
+font-size:13px;
+color:var(--muted);
+
+}
+
+.card-value{
+
+font-size:28px;
+color:var(--primary);
+
+}
+
+/* ================================
+TABLE
+================================ */
+
+table{
+width:100%;
+border-collapse:collapse;
+}
+
+th{
+
+text-align:left;
+background:var(--primary-soft);
+padding:12px;
+
+}
+
+td{
+
+padding:12px;
+border-bottom:1px solid var(--border);
+
+}
+
+/* ================================
+FORM
+================================ */
+
+input{
+
+padding:10px;
+border-radius:8px;
+border:1px solid var(--border);
+margin-right:10px;
+
+}
+
+button{
+
+padding:10px 16px;
+background:var(--primary);
+border:none;
+border-radius:8px;
+color:white;
+cursor:pointer;
+
+}
+
+/* ================================
+HEATMAP
+================================ */
+
+.heatmap{
+
+display:grid;
+grid-template-columns:repeat(53,12px);
+gap:4px;
+
+}
+
+.heat{
+
+width:12px;
+height:12px;
+background:var(--mint);
+border-radius:2px;
+
+}
+
+/* ================================
+PLANNER
+================================ */
+
+.planner{
+
+display:flex;
+gap:15px;
+
+}
+
+.column{
+
+flex:1;
+background:#f9faff;
+padding:15px;
+border-radius:12px;
+
+}
+
+.task{
+
+background:white;
+padding:8px;
+margin-bottom:8px;
+border-radius:8px;
+
+}
+
+/* ================================
+PROGRESS
+================================ */
+
+.progress{
+
+height:8px;
+background:#eee;
+border-radius:5px;
+overflow:hidden;
+
+}
+
+.bar{
+
+height:100%;
+background:var(--primary);
+
+}
+
+/* ================================
+PAGES
+================================ */
+
+.page{
+display:none;
+}
+
+.page.active{
+display:block;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="wrapper">
+
+<!-- SIDEBAR -->
+
+<div class="sidebar">
+
+<div class="logo">DevOps LMS</div>
+
+<div class="nav-item" onclick="route('dashboard')">Dashboard</div>
+<div class="nav-item" onclick="route('tracker')">Study Tracker</div>
+<div class="nav-item" onclick="route('analytics')">Analytics</div>
+<div class="nav-item" onclick="route('planner')">Planner</div>
+<div class="nav-item" onclick="route('certs')">Certifications</div>
+
+</div>
+
+<!-- MAIN -->
+
+<div class="main">
+
+<div class="header">
+
+<h2 id="pageTitle">Dashboard</h2>
+
+</div>
+
+<!-- DASHBOARD -->
+
+<div id="dashboard" class="page active">
+
+<div class="grid">
+
+<div class="card">
+<div class="card-title">Topics Completed</div>
+<div id="topicCount" class="card-value">0</div>
+</div>
+
+<div class="card">
+<div class="card-title">Total Study Hours</div>
+<div id="hourCount" class="card-value">0</div>
+</div>
+
+<div class="card">
+<div class="card-title">Current Streak</div>
+<div id="streak" class="card-value">0</div>
+</div>
+
+</div>
+
+<br>
+
+<div class="card">
+
+<h3>Study Activity</h3>
+
+<div id="heatmap" class="heatmap"></div>
+
+</div>
+
+</div>
+
+<!-- TRACKER -->
+
+<div id="tracker" class="page">
+
+<div class="card">
+
+<h3>Add Topic</h3>
+
+<input id="topic">
+<input id="hours">
+
+<button onclick="addTopic()">Add</button>
+
+</div>
+
+<br>
+
+<div class="card">
+
+<table>
+
+<thead>
+
+<tr>
+<th>Topic</th>
+<th>Hours</th>
+<th>Date</th>
+</tr>
+
+</thead>
+
+<tbody id="table"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+<!-- ANALYTICS -->
+
+<div id="analytics" class="page">
+
+<div class="card">
+
+<canvas id="chart"></canvas>
+
+</div>
+
+</div>
+
+<!-- PLANNER -->
+
+<div id="planner" class="page">
+
+<div class="planner">
+
+<div class="column">
+
+<h4>Planned</h4>
+
+<div class="task">Terraform</div>
+<div class="task">AWS IAM</div>
+
+</div>
+
+<div class="column">
+
+<h4>Studying</h4>
+
+<div class="task">Docker Networking</div>
+
+</div>
+
+<div class="column">
+
+<h4>Completed</h4>
+
+<div class="task">Linux Basics</div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- CERTIFICATIONS -->
+
+<div id="certs" class="page">
+
+<div class="card">
+
+<p>AWS Cloud Practitioner</p>
+
+<div class="progress">
+<div class="bar" style="width:70%"></div>
+</div>
+
+<p>AWS Solutions Architect</p>
+
+<div class="progress">
+<div class="bar" style="width:40%"></div>
+</div>
+
+<p>AWS DevOps Engineer</p>
+
+<div class="progress">
+<div class="bar" style="width:20%"></div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+/* =====================
+ROUTER
+===================== */
+
+function route(page){
+
+document.querySelectorAll(".page")
+.forEach(p=>p.classList.remove("active"))
+
+document.getElementById(page)
+.classList.add("active")
+
+pageTitle.innerText =
+page.charAt(0).toUpperCase()+page.slice(1)
+
+}
+
+/* =====================
+DATA LAYER
+===================== */
+
+let topics =
+JSON.parse(localStorage.getItem("topics"))
+|| seedData()
+
+function seedData(){
+
+let demo=[
+
+{topic:"Linux Basics",hours:4,date:"Jan 2"},
+{topic:"Git Branching",hours:3,date:"Jan 3"},
+{topic:"Docker Images",hours:5,date:"Jan 6"},
+{topic:"Kubernetes Pods",hours:6,date:"Jan 8"}
+
+]
+
+localStorage.setItem("topics",JSON.stringify(demo))
+
+return demo
+
+}
+
+/* =====================
+RENDER
+===================== */
+
+function render(){
+
+let table=document.getElementById("table")
+
+if(!table)return
+
+table.innerHTML=""
+
+let total=0
+
+topics.forEach(t=>{
+
+total+=Number(t.hours)
+
+table.innerHTML+=`
+
+<tr>
+<td>${t.topic}</td>
+<td>${t.hours}</td>
+<td>${t.date}</td>
+</tr>
+
+`
+
+})
+
+topicCount.innerText=topics.length
+hourCount.innerText=total
+
+drawChart()
+renderHeatmap()
+
+}
+
+render()
+
+/* =====================
+ADD TOPIC
+===================== */
+
+function addTopic(){
+
+let t=document.getElementById("topic").value
+let h=document.getElementById("hours").value
+
+if(!t||!h) return
+
+topics.push({
+
+topic:t,
+hours:h,
+date:new Date().toLocaleDateString()
+
+})
+
+localStorage.setItem("topics",JSON.stringify(topics))
+
+render()
+
+}
+
+/* =====================
+CHART
+===================== */
+
+function drawChart(){
+
+let ctx=document.getElementById("chart")
+
+if(!ctx)return
+
+new Chart(ctx,{
+
+type:"bar",
+
+data:{
+labels:topics.map(t=>t.topic),
+datasets:[{
+
+label:"Study Hours",
+data:topics.map(t=>t.hours),
+backgroundColor:"#8e8bff"
+
+}]
+}
+
+})
+
+}
+
+/* =====================
+HEATMAP
+===================== */
+
+function renderHeatmap(){
+
+let h=document.getElementById("heatmap")
+
+if(!h)return
+
+h.innerHTML=""
+
+for(let i=0;i<365;i++){
+
+let d=document.createElement("div")
+d.className="heat"
+
+h.appendChild(d)
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
