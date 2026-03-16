@@ -5,45 +5,41 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>DevOps Study LMS</title>
+<title>DevOps Learning Platform</title>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
 
 /* ===============================
-PASTEL DESIGN SYSTEM
+MODERN DESIGN SYSTEM
 ================================*/
 
 :root{
 
---bg:#f7f8ff;
+--bg:#f6f7ff;
 --sidebar:#ffffff;
 --card:#ffffff;
 
---primary:#8b8cff;
---primary-soft:#ececff;
+--primary:#7b7cff;
+--soft:#ececff;
 
---mint:#dff7f2;
---peach:#ffece6;
---sky:#e8f2ff;
+--mint:#e7fbf8;
+--peach:#fff2ee;
 
---text:#333;
---muted:#777;
-
---border:#eceefe;
+--border:#e9ebff;
+--text:#202232;
+--muted:#7b7b8f;
 
 }
 
 *{box-sizing:border-box}
 
 body{
-
 margin:0;
 font-family:Inter,system-ui;
 background:var(--bg);
 color:var(--text);
-
 }
 
 /* ===============================
@@ -51,26 +47,24 @@ LAYOUT
 ================================*/
 
 .wrapper{
-
 display:flex;
 height:100vh;
-
 }
 
 .sidebar{
 
-width:250px;
-background:var(--sidebar);
-padding:25px;
+width:260px;
+background:white;
 border-right:1px solid var(--border);
+padding:25px;
 overflow:auto;
 
 }
 
 .logo{
 
-font-size:22px;
 font-weight:700;
+font-size:22px;
 color:var(--primary);
 margin-bottom:30px;
 
@@ -80,15 +74,16 @@ margin-bottom:30px;
 
 padding:12px;
 border-radius:10px;
-margin-bottom:8px;
+margin-bottom:6px;
+background:var(--soft);
 cursor:pointer;
-background:var(--primary-soft);
+transition:.2s;
 
 }
 
 .nav-item:hover{
 
-background:#e2e3ff;
+transform:translateX(4px);
 
 }
 
@@ -123,25 +118,36 @@ gap:20px;
 
 .card{
 
-background:var(--card);
+background:white;
+border-radius:16px;
 padding:20px;
-border-radius:18px;
 border:1px solid var(--border);
-box-shadow:0 8px 20px rgba(0,0,0,0.04);
+box-shadow:0 10px 20px rgba(0,0,0,.04);
 
 }
 
 .card-title{
-
 font-size:13px;
 color:var(--muted);
-
 }
 
 .card-value{
-
 font-size:28px;
 color:var(--primary);
+}
+
+/* ===============================
+BUTTON
+================================*/
+
+button{
+
+background:var(--primary);
+border:none;
+color:white;
+padding:10px 16px;
+border-radius:8px;
+cursor:pointer;
 
 }
 
@@ -150,86 +156,52 @@ TABLE
 ================================*/
 
 table{
-
 width:100%;
 border-collapse:collapse;
-
 }
 
 th{
 
-background:var(--primary-soft);
+background:var(--soft);
 text-align:left;
 padding:12px;
 
 }
 
 td{
-
 padding:12px;
 border-bottom:1px solid var(--border);
-
 }
 
 /* ===============================
-BUTTONS
-================================*/
-
-button{
-
-padding:10px 16px;
-background:var(--primary);
-border:none;
-color:white;
-border-radius:8px;
-cursor:pointer;
-
-}
-
-button:hover{
-
-opacity:.9;
-
-}
-
-/* ===============================
-INPUTS
+INPUT
 ================================*/
 
 input,textarea{
 
+width:100%;
 padding:10px;
 border-radius:8px;
 border:1px solid var(--border);
-width:100%;
 margin-bottom:10px;
 
 }
-
-/* ===============================
-PAGES
-================================*/
-
-.page{display:none}
-.page.active{display:block}
 
 /* ===============================
 KANBAN
 ================================*/
 
 .kanban{
-
 display:flex;
 gap:15px;
-
 }
 
 .column{
 
 flex:1;
-background:#f9faff;
+background:#fafbff;
 padding:15px;
-border-radius:14px;
+border-radius:12px;
 
 }
 
@@ -239,26 +211,7 @@ background:white;
 padding:8px;
 border-radius:8px;
 margin-bottom:8px;
-
-}
-
-/* ===============================
-PROGRESS
-================================*/
-
-.progress{
-
-height:8px;
-background:#eee;
-border-radius:10px;
-overflow:hidden;
-
-}
-
-.bar{
-
-height:100%;
-background:var(--primary);
+cursor:grab;
 
 }
 
@@ -278,10 +231,17 @@ gap:4px;
 
 width:12px;
 height:12px;
-background:var(--mint);
+background:#e7fbf8;
 border-radius:2px;
 
 }
+
+/* ===============================
+PAGES
+================================*/
+
+.page{display:none}
+.page.active{display:block}
 
 /* ===============================
 MODAL
@@ -306,7 +266,7 @@ justify-content:center;
 background:white;
 padding:25px;
 border-radius:15px;
-width:300px;
+width:320px;
 
 }
 
@@ -321,9 +281,21 @@ bottom:20px;
 right:20px;
 background:var(--primary);
 color:white;
-padding:12px 18px;
+padding:12px 20px;
 border-radius:10px;
 display:none;
+
+}
+
+/* ===============================
+POMODORO
+================================*/
+
+.timer{
+
+font-size:40px;
+text-align:center;
+margin:20px 0;
 
 }
 
@@ -335,6 +307,8 @@ display:none;
 
 <div class="wrapper">
 
+<!-- SIDEBAR -->
+
 <div class="sidebar">
 
 <div class="logo">DevOps LMS</div>
@@ -343,12 +317,12 @@ display:none;
 <div class="nav-item" onclick="route('tracker')">Study Tracker</div>
 <div class="nav-item" onclick="route('analytics')">Analytics</div>
 <div class="nav-item" onclick="route('planner')">Planner</div>
-<div class="nav-item" onclick="route('certs')">Certifications</div>
+<div class="nav-item" onclick="route('timer')">Pomodoro Timer</div>
+<div class="nav-item" onclick="route('roadmap')">DevOps Roadmap</div>
 <div class="nav-item" onclick="route('goals')">Goals</div>
 <div class="nav-item" onclick="route('resources')">Resources</div>
 <div class="nav-item" onclick="route('notes')">Notes</div>
 <div class="nav-item" onclick="route('achievements')">Achievements</div>
-<div class="nav-item" onclick="route('calendar')">Calendar</div>
 <div class="nav-item" onclick="route('settings')">Settings</div>
 
 </div>
@@ -381,7 +355,7 @@ display:none;
 
 <div class="card">
 <div class="card-title">Current Streak</div>
-<div id="streak" class="card-value">5</div>
+<div class="card-value">5</div>
 </div>
 
 </div>
@@ -398,7 +372,7 @@ display:none;
 
 </div>
 
-<!-- TRACKER -->
+<!-- STUDY TRACKER -->
 
 <div id="tracker" class="page">
 
@@ -440,40 +414,66 @@ display:none;
 
 <div class="kanban">
 
-<div class="column">
+<div class="column" ondrop="drop(event)" ondragover="allowDrop(event)">
+
 <h4>Planned</h4>
-<div class="task">Terraform</div>
-<div class="task">AWS IAM</div>
+
+<div class="task" draggable="true" ondragstart="drag(event)">Terraform</div>
+
 </div>
 
-<div class="column">
+<div class="column" ondrop="drop(event)" ondragover="allowDrop(event)">
+
 <h4>Studying</h4>
-<div class="task">Docker Networking</div>
+
 </div>
 
-<div class="column">
+<div class="column" ondrop="drop(event)" ondragover="allowDrop(event)">
+
 <h4>Completed</h4>
-<div class="task">Linux Basics</div>
-</div>
 
 </div>
 
 </div>
 
-<!-- CERTIFICATIONS -->
+</div>
 
-<div id="certs" class="page">
+<!-- TIMER -->
+
+<div id="timer" class="page">
 
 <div class="card">
 
-<p>AWS Cloud Practitioner</p>
-<div class="progress"><div class="bar" style="width:70%"></div></div>
+<h3>Pomodoro Timer</h3>
 
-<p>AWS Solutions Architect</p>
-<div class="progress"><div class="bar" style="width:40%"></div></div>
+<div id="time" class="timer">25:00</div>
 
-<p>AWS DevOps Engineer</p>
-<div class="progress"><div class="bar" style="width:20%"></div></div>
+<button onclick="startTimer()">Start</button>
+
+</div>
+
+</div>
+
+<!-- ROADMAP -->
+
+<div id="roadmap" class="page">
+
+<div class="card">
+
+<h3>DevOps Roadmap</h3>
+
+<ul>
+
+<li>Linux Fundamentals</li>
+<li>Git & Version Control</li>
+<li>Docker Containers</li>
+<li>Kubernetes</li>
+<li>CI/CD Pipelines</li>
+<li>Terraform</li>
+<li>Cloud (AWS)</li>
+<li>Monitoring & Logging</li>
+
+</ul>
 
 </div>
 
@@ -485,12 +485,12 @@ display:none;
 
 <div class="card">
 
-<h3>Learning Goals</h3>
-
 <ul>
-<li>Finish Docker Course</li>
-<li>Pass AWS CCP</li>
-<li>Deploy CI/CD Pipeline</li>
+
+<li>AWS Certification</li>
+<li>Deploy Kubernetes Cluster</li>
+<li>Build CI/CD Pipeline</li>
+
 </ul>
 
 </div>
@@ -506,7 +506,7 @@ display:none;
 <div class="card">Docker Docs</div>
 <div class="card">Kubernetes Docs</div>
 <div class="card">Terraform Tutorials</div>
-<div class="card">AWS Well Architected</div>
+<div class="card">AWS Docs</div>
 
 </div>
 
@@ -518,9 +518,9 @@ display:none;
 
 <div class="card">
 
-<textarea placeholder="Write DevOps notes..."></textarea>
+<textarea placeholder="Write notes"></textarea>
 
-<button onclick="toast('Note saved')">Save Note</button>
+<button onclick="toast('Saved')">Save</button>
 
 </div>
 
@@ -535,19 +535,6 @@ display:none;
 <div class="card">First Study Session</div>
 <div class="card">10 Topics Completed</div>
 <div class="card">100 Study Hours</div>
-<div class="card">7 Day Streak</div>
-
-</div>
-
-</div>
-
-<!-- CALENDAR -->
-
-<div id="calendar" class="page">
-
-<div class="card">
-
-<p>Study calendar coming soon</p>
 
 </div>
 
@@ -559,13 +546,11 @@ display:none;
 
 <div class="card">
 
-<p>Profile Settings</p>
+<input placeholder="Your Name">
 
-<input placeholder="Name">
+<input placeholder="Weekly Study Goal">
 
-<input placeholder="Goal Hours / Week">
-
-<button onclick="toast('Settings saved')">Save</button>
+<button onclick="toast('Settings Saved')">Save</button>
 
 </div>
 
@@ -583,9 +568,8 @@ display:none;
 
 <h3>Add Topic</h3>
 
-<input id="topic" placeholder="Topic">
-
-<input id="hours" placeholder="Hours">
+<input id="topic">
+<input id="hours">
 
 <button onclick="addTopic()">Save</button>
 
@@ -593,38 +577,26 @@ display:none;
 
 </div>
 
-<div class="toast" id="toast"></div>
+<div id="toast" class="toast"></div>
 
 <script>
 
 /* ROUTER */
 
-function route(page){
+function route(p){
 
 document.querySelectorAll(".page")
-.forEach(p=>p.classList.remove("active"))
+.forEach(x=>x.classList.remove("active"))
 
-document.getElementById(page)
-.classList.add("active")
+document.getElementById(p).classList.add("active")
 
-title.innerText=page.charAt(0).toUpperCase()+page.slice(1)
+title.innerText=p
 
 }
 
 /* DATA */
 
-let topics=
-
-JSON.parse(localStorage.getItem("topics"))
-
-||[
-
-{topic:"Linux Basics",hours:4,date:"Jan 2"},
-{topic:"Git Branching",hours:3,date:"Jan 3"},
-{topic:"Docker Images",hours:5,date:"Jan 6"},
-{topic:"Kubernetes Pods",hours:6,date:"Jan 8"}
-
-]
+let topics=JSON.parse(localStorage.getItem("topics"))||[]
 
 /* RENDER */
 
@@ -632,7 +604,7 @@ function render(){
 
 let table=document.getElementById("table")
 
-if(!table) return
+if(!table)return
 
 table.innerHTML=""
 
@@ -643,13 +615,11 @@ topics.forEach(t=>{
 hours+=Number(t.hours)
 
 table.innerHTML+=`
-
 <tr>
 <td>${t.topic}</td>
 <td>${t.hours}</td>
 <td>${t.date}</td>
 </tr>
-
 `
 
 })
@@ -658,7 +628,6 @@ topicCount.innerText=topics.length
 hoursCount.innerText=hours
 
 drawChart()
-renderHeatmap()
 
 }
 
@@ -670,13 +639,6 @@ function addTopic(){
 
 let t=topic.value
 let h=hours.value
-
-if(!t||!h){
-
-toast("Missing input")
-return
-
-}
 
 topics.push({
 
@@ -690,17 +652,9 @@ localStorage.setItem("topics",JSON.stringify(topics))
 
 modal.style.display="none"
 
-toast("Topic added")
+toast("Topic Added")
 
 render()
-
-}
-
-/* MODAL */
-
-function openModal(){
-
-modal.style.display="flex"
 
 }
 
@@ -713,11 +667,15 @@ let t=document.getElementById("toast")
 t.innerText=msg
 t.style.display="block"
 
-setTimeout(()=>{
+setTimeout(()=>t.style.display="none",2000)
 
-t.style.display="none"
+}
 
-},2000)
+/* MODAL */
+
+function openModal(){
+
+modal.style.display="flex"
 
 }
 
@@ -727,7 +685,7 @@ function drawChart(){
 
 let ctx=document.getElementById("chart")
 
-if(!ctx) return
+if(!ctx)return
 
 new Chart(ctx,{
 
@@ -741,7 +699,7 @@ datasets:[{
 
 label:"Study Hours",
 data:topics.map(t=>t.hours),
-backgroundColor:"#8b8cff"
+backgroundColor:"#7b7cff"
 
 }]
 
@@ -751,21 +709,43 @@ backgroundColor:"#8b8cff"
 
 }
 
-/* HEATMAP */
+/* KANBAN */
 
-function renderHeatmap(){
+function allowDrop(ev){ev.preventDefault()}
 
-let h=document.getElementById("heatmap")
+function drag(ev){ev.dataTransfer.setData("text",ev.target.innerHTML)}
 
-if(!h) return
+function drop(ev){
 
-for(let i=0;i<365;i++){
+ev.preventDefault()
 
-let d=document.createElement("div")
-d.className="heat"
-h.appendChild(d)
+let data=ev.dataTransfer.getData("text")
+
+let div=document.createElement("div")
+
+div.className="task"
+div.innerHTML=data
+
+ev.target.appendChild(div)
 
 }
+
+/* TIMER */
+
+let seconds=1500
+
+function startTimer(){
+
+setInterval(()=>{
+
+seconds--
+
+let m=Math.floor(seconds/60)
+let s=seconds%60
+
+time.innerText=`${m}:${s<10?"0"+s:s}`
+
+},1000)
 
 }
 
