@@ -1,32 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>DevOps Study Dashboard</title>
+<title>DevOps Study LMS</title>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
 
-/* ================================
-GLOBAL DESIGN SYSTEM
-================================ */
+/* ===============================
+PASTEL DESIGN SYSTEM
+================================*/
 
 :root{
 
---bg:#f6f8ff;
+--bg:#f7f8ff;
 --sidebar:#ffffff;
 --card:#ffffff;
 
---primary:#8e8bff;
---primary-soft:#e9e9ff;
+--primary:#8b8cff;
+--primary-soft:#ececff;
 
---mint:#d8f5ef;
---mint-dark:#9be3d6;
+--mint:#dff7f2;
+--peach:#ffece6;
+--sky:#e8f2ff;
 
 --text:#333;
 --muted:#777;
@@ -35,9 +35,7 @@ GLOBAL DESIGN SYSTEM
 
 }
 
-*{
-box-sizing:border-box;
-}
+*{box-sizing:border-box}
 
 body{
 
@@ -48,28 +46,31 @@ color:var(--text);
 
 }
 
-/* ================================
+/* ===============================
 LAYOUT
-================================ */
+================================*/
 
 .wrapper{
+
 display:flex;
 height:100vh;
+
 }
 
 .sidebar{
 
-width:240px;
+width:250px;
 background:var(--sidebar);
 padding:25px;
 border-right:1px solid var(--border);
+overflow:auto;
 
 }
 
 .logo{
 
-font-size:20px;
-font-weight:600;
+font-size:22px;
+font-weight:700;
 color:var(--primary);
 margin-bottom:30px;
 
@@ -79,14 +80,16 @@ margin-bottom:30px;
 
 padding:12px;
 border-radius:10px;
-cursor:pointer;
 margin-bottom:8px;
+cursor:pointer;
 background:var(--primary-soft);
 
 }
 
 .nav-item:hover{
-background:#dfe0ff;
+
+background:#e2e3ff;
+
 }
 
 .main{
@@ -101,13 +104,14 @@ overflow:auto;
 
 display:flex;
 justify-content:space-between;
+align-items:center;
 margin-bottom:25px;
 
 }
 
-/* ================================
+/* ===============================
 CARDS
-================================ */
+================================*/
 
 .grid{
 
@@ -121,8 +125,9 @@ gap:20px;
 
 background:var(--card);
 padding:20px;
-border-radius:16px;
+border-radius:18px;
 border:1px solid var(--border);
+box-shadow:0 8px 20px rgba(0,0,0,0.04);
 
 }
 
@@ -140,19 +145,21 @@ color:var(--primary);
 
 }
 
-/* ================================
+/* ===============================
 TABLE
-================================ */
+================================*/
 
 table{
+
 width:100%;
 border-collapse:collapse;
+
 }
 
 th{
 
-text-align:left;
 background:var(--primary-soft);
+text-align:left;
 padding:12px;
 
 }
@@ -164,33 +171,100 @@ border-bottom:1px solid var(--border);
 
 }
 
-/* ================================
-FORM
-================================ */
-
-input{
-
-padding:10px;
-border-radius:8px;
-border:1px solid var(--border);
-margin-right:10px;
-
-}
+/* ===============================
+BUTTONS
+================================*/
 
 button{
 
 padding:10px 16px;
 background:var(--primary);
 border:none;
-border-radius:8px;
 color:white;
+border-radius:8px;
 cursor:pointer;
 
 }
 
-/* ================================
+button:hover{
+
+opacity:.9;
+
+}
+
+/* ===============================
+INPUTS
+================================*/
+
+input,textarea{
+
+padding:10px;
+border-radius:8px;
+border:1px solid var(--border);
+width:100%;
+margin-bottom:10px;
+
+}
+
+/* ===============================
+PAGES
+================================*/
+
+.page{display:none}
+.page.active{display:block}
+
+/* ===============================
+KANBAN
+================================*/
+
+.kanban{
+
+display:flex;
+gap:15px;
+
+}
+
+.column{
+
+flex:1;
+background:#f9faff;
+padding:15px;
+border-radius:14px;
+
+}
+
+.task{
+
+background:white;
+padding:8px;
+border-radius:8px;
+margin-bottom:8px;
+
+}
+
+/* ===============================
+PROGRESS
+================================*/
+
+.progress{
+
+height:8px;
+background:#eee;
+border-radius:10px;
+overflow:hidden;
+
+}
+
+.bar{
+
+height:100%;
+background:var(--primary);
+
+}
+
+/* ===============================
 HEATMAP
-================================ */
+================================*/
 
 .heatmap{
 
@@ -209,65 +283,48 @@ border-radius:2px;
 
 }
 
-/* ================================
-PLANNER
-================================ */
+/* ===============================
+MODAL
+================================*/
 
-.planner{
+.modal{
 
-display:flex;
-gap:15px;
-
-}
-
-.column{
-
-flex:1;
-background:#f9faff;
-padding:15px;
-border-radius:12px;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,.3);
+display:none;
+align-items:center;
+justify-content:center;
 
 }
 
-.task{
+.modal-content{
 
 background:white;
-padding:8px;
-margin-bottom:8px;
-border-radius:8px;
+padding:25px;
+border-radius:15px;
+width:300px;
 
 }
 
-/* ================================
-PROGRESS
-================================ */
+/* ===============================
+TOAST
+================================*/
 
-.progress{
+.toast{
 
-height:8px;
-background:#eee;
-border-radius:5px;
-overflow:hidden;
-
-}
-
-.bar{
-
-height:100%;
+position:fixed;
+bottom:20px;
+right:20px;
 background:var(--primary);
-
-}
-
-/* ================================
-PAGES
-================================ */
-
-.page{
+color:white;
+padding:12px 18px;
+border-radius:10px;
 display:none;
-}
 
-.page.active{
-display:block;
 }
 
 </style>
@@ -278,8 +335,6 @@ display:block;
 
 <div class="wrapper">
 
-<!-- SIDEBAR -->
-
 <div class="sidebar">
 
 <div class="logo">DevOps LMS</div>
@@ -289,16 +344,22 @@ display:block;
 <div class="nav-item" onclick="route('analytics')">Analytics</div>
 <div class="nav-item" onclick="route('planner')">Planner</div>
 <div class="nav-item" onclick="route('certs')">Certifications</div>
+<div class="nav-item" onclick="route('goals')">Goals</div>
+<div class="nav-item" onclick="route('resources')">Resources</div>
+<div class="nav-item" onclick="route('notes')">Notes</div>
+<div class="nav-item" onclick="route('achievements')">Achievements</div>
+<div class="nav-item" onclick="route('calendar')">Calendar</div>
+<div class="nav-item" onclick="route('settings')">Settings</div>
 
 </div>
-
-<!-- MAIN -->
 
 <div class="main">
 
 <div class="header">
 
-<h2 id="pageTitle">Dashboard</h2>
+<h2 id="title">Dashboard</h2>
+
+<button onclick="openModal()">Add Topic</button>
 
 </div>
 
@@ -314,13 +375,13 @@ display:block;
 </div>
 
 <div class="card">
-<div class="card-title">Total Study Hours</div>
-<div id="hourCount" class="card-value">0</div>
+<div class="card-title">Study Hours</div>
+<div id="hoursCount" class="card-value">0</div>
 </div>
 
 <div class="card">
 <div class="card-title">Current Streak</div>
-<div id="streak" class="card-value">0</div>
+<div id="streak" class="card-value">5</div>
 </div>
 
 </div>
@@ -343,29 +404,14 @@ display:block;
 
 <div class="card">
 
-<h3>Add Topic</h3>
-
-<input id="topic">
-<input id="hours">
-
-<button onclick="addTopic()">Add</button>
-
-</div>
-
-<br>
-
-<div class="card">
-
 <table>
 
 <thead>
-
 <tr>
 <th>Topic</th>
 <th>Hours</th>
 <th>Date</th>
 </tr>
-
 </thead>
 
 <tbody id="table"></tbody>
@@ -392,31 +438,22 @@ display:block;
 
 <div id="planner" class="page">
 
-<div class="planner">
+<div class="kanban">
 
 <div class="column">
-
 <h4>Planned</h4>
-
 <div class="task">Terraform</div>
 <div class="task">AWS IAM</div>
-
 </div>
 
 <div class="column">
-
 <h4>Studying</h4>
-
 <div class="task">Docker Networking</div>
-
 </div>
 
 <div class="column">
-
 <h4>Completed</h4>
-
 <div class="task">Linux Basics</div>
-
 </div>
 
 </div>
@@ -430,21 +467,106 @@ display:block;
 <div class="card">
 
 <p>AWS Cloud Practitioner</p>
-
-<div class="progress">
-<div class="bar" style="width:70%"></div>
-</div>
+<div class="progress"><div class="bar" style="width:70%"></div></div>
 
 <p>AWS Solutions Architect</p>
-
-<div class="progress">
-<div class="bar" style="width:40%"></div>
-</div>
+<div class="progress"><div class="bar" style="width:40%"></div></div>
 
 <p>AWS DevOps Engineer</p>
+<div class="progress"><div class="bar" style="width:20%"></div></div>
 
-<div class="progress">
-<div class="bar" style="width:20%"></div>
+</div>
+
+</div>
+
+<!-- GOALS -->
+
+<div id="goals" class="page">
+
+<div class="card">
+
+<h3>Learning Goals</h3>
+
+<ul>
+<li>Finish Docker Course</li>
+<li>Pass AWS CCP</li>
+<li>Deploy CI/CD Pipeline</li>
+</ul>
+
+</div>
+
+</div>
+
+<!-- RESOURCES -->
+
+<div id="resources" class="page">
+
+<div class="grid">
+
+<div class="card">Docker Docs</div>
+<div class="card">Kubernetes Docs</div>
+<div class="card">Terraform Tutorials</div>
+<div class="card">AWS Well Architected</div>
+
+</div>
+
+</div>
+
+<!-- NOTES -->
+
+<div id="notes" class="page">
+
+<div class="card">
+
+<textarea placeholder="Write DevOps notes..."></textarea>
+
+<button onclick="toast('Note saved')">Save Note</button>
+
+</div>
+
+</div>
+
+<!-- ACHIEVEMENTS -->
+
+<div id="achievements" class="page">
+
+<div class="grid">
+
+<div class="card">First Study Session</div>
+<div class="card">10 Topics Completed</div>
+<div class="card">100 Study Hours</div>
+<div class="card">7 Day Streak</div>
+
+</div>
+
+</div>
+
+<!-- CALENDAR -->
+
+<div id="calendar" class="page">
+
+<div class="card">
+
+<p>Study calendar coming soon</p>
+
+</div>
+
+</div>
+
+<!-- SETTINGS -->
+
+<div id="settings" class="page">
+
+<div class="card">
+
+<p>Profile Settings</p>
+
+<input placeholder="Name">
+
+<input placeholder="Goal Hours / Week">
+
+<button onclick="toast('Settings saved')">Save</button>
+
 </div>
 
 </div>
@@ -453,13 +575,29 @@ display:block;
 
 </div>
 
+<!-- MODAL -->
+
+<div class="modal" id="modal">
+
+<div class="modal-content">
+
+<h3>Add Topic</h3>
+
+<input id="topic" placeholder="Topic">
+
+<input id="hours" placeholder="Hours">
+
+<button onclick="addTopic()">Save</button>
+
 </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
 
 <script>
 
-/* =====================
-ROUTER
-===================== */
+/* ROUTER */
 
 function route(page){
 
@@ -469,22 +607,17 @@ document.querySelectorAll(".page")
 document.getElementById(page)
 .classList.add("active")
 
-pageTitle.innerText =
-page.charAt(0).toUpperCase()+page.slice(1)
+title.innerText=page.charAt(0).toUpperCase()+page.slice(1)
 
 }
 
-/* =====================
-DATA LAYER
-===================== */
+/* DATA */
 
-let topics =
+let topics=
+
 JSON.parse(localStorage.getItem("topics"))
-|| seedData()
 
-function seedData(){
-
-let demo=[
+||[
 
 {topic:"Linux Basics",hours:4,date:"Jan 2"},
 {topic:"Git Branching",hours:3,date:"Jan 3"},
@@ -493,29 +626,21 @@ let demo=[
 
 ]
 
-localStorage.setItem("topics",JSON.stringify(demo))
-
-return demo
-
-}
-
-/* =====================
-RENDER
-===================== */
+/* RENDER */
 
 function render(){
 
 let table=document.getElementById("table")
 
-if(!table)return
+if(!table) return
 
 table.innerHTML=""
 
-let total=0
+let hours=0
 
 topics.forEach(t=>{
 
-total+=Number(t.hours)
+hours+=Number(t.hours)
 
 table.innerHTML+=`
 
@@ -530,7 +655,7 @@ table.innerHTML+=`
 })
 
 topicCount.innerText=topics.length
-hourCount.innerText=total
+hoursCount.innerText=hours
 
 drawChart()
 renderHeatmap()
@@ -539,16 +664,19 @@ renderHeatmap()
 
 render()
 
-/* =====================
-ADD TOPIC
-===================== */
+/* ADD TOPIC */
 
 function addTopic(){
 
-let t=document.getElementById("topic").value
-let h=document.getElementById("hours").value
+let t=topic.value
+let h=hours.value
 
-if(!t||!h) return
+if(!t||!h){
+
+toast("Missing input")
+return
+
+}
 
 topics.push({
 
@@ -560,56 +688,81 @@ date:new Date().toLocaleDateString()
 
 localStorage.setItem("topics",JSON.stringify(topics))
 
+modal.style.display="none"
+
+toast("Topic added")
+
 render()
 
 }
 
-/* =====================
-CHART
-===================== */
+/* MODAL */
+
+function openModal(){
+
+modal.style.display="flex"
+
+}
+
+/* TOAST */
+
+function toast(msg){
+
+let t=document.getElementById("toast")
+
+t.innerText=msg
+t.style.display="block"
+
+setTimeout(()=>{
+
+t.style.display="none"
+
+},2000)
+
+}
+
+/* CHART */
 
 function drawChart(){
 
 let ctx=document.getElementById("chart")
 
-if(!ctx)return
+if(!ctx) return
 
 new Chart(ctx,{
 
 type:"bar",
 
 data:{
+
 labels:topics.map(t=>t.topic),
+
 datasets:[{
 
 label:"Study Hours",
 data:topics.map(t=>t.hours),
-backgroundColor:"#8e8bff"
+backgroundColor:"#8b8cff"
 
 }]
+
 }
 
 })
 
 }
 
-/* =====================
-HEATMAP
-===================== */
+/* HEATMAP */
 
 function renderHeatmap(){
 
 let h=document.getElementById("heatmap")
 
-if(!h)return
-
-h.innerHTML=""
+if(!h) return
 
 for(let i=0;i<365;i++){
 
 let d=document.createElement("div")
 d.className="heat"
-
 h.appendChild(d)
 
 }
